@@ -13,8 +13,8 @@ class ApplicationController < ActionController::Base
       product_features << doc.css('div.row div.col-xs-12 p')[i + 4].text
     }
 
-    manufacturers_site = doc.css('div.row div.col-xs-12 p a')
+    availability = doc.css('div.col-xs-12 p')[28].text
 
-    render html: manufacturers_site
+    render html: availability
   end
 end
