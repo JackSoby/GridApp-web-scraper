@@ -24,10 +24,10 @@ class ApplicationController < ActionController::Base
     distributors = []
     doc.css('div.col-xs-12 td').each_with_index do |info, index|
       if index % 4 == 0
-        {
+        distributors << {
           dealer: doc.css('div.col-xs-12 td')[index].text,
-          country: doc.css('div.col-xs-12 td')[index + 1].text,
-          price: doc.css('div.col-xs-12 td')[index + 2].text,
+          country: doc.css('div.col-xs-12 td')[index + 1].text.gsub("\n", "").gsub("  ", ""),
+          price: doc.css('div.col-xs-12 td')[index + 2].text.gsub("\n", "").gsub("  ", ""),
           contact: doc.css('div.col-xs-12 td')[index + 3].css('a')[0]["href"]
         }
       end
@@ -42,9 +42,10 @@ class ApplicationController < ActionController::Base
         manufacturer: manufacturers_site,
         lighting_global: light_global_site,
         awango: awango_site
-      }
+      },
+      distributors: distributors
     }
 
-    render html: doc.css('div.col-xs-12 td')[3].css('a')[0]["href"]
+    render json: data
   end
 end
