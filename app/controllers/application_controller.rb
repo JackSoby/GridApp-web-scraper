@@ -3,23 +3,13 @@ class ApplicationController < ActionController::Base
 
   def scrape_mangoo
     require 'open-uri'
-    doc = Nokogiri::HTML(open("https://www.mangoo.org/product-catalogue/productdetail/market/show/product/s20-solar-lamp/?tx_marketplace_articlesearch%5Bcontroller%5D=Product&cHash=dec2b667b8c66f18d9b28aafd0a09c28"))
-    product_name = doc.css('.col-xs-12 h1').text
-    product_description = doc.css('p.bodytext')[0].text
-
+    doc = Nokogiri::HTML(open("https://www.mangoo.org/product-catalogue/productdetail/market/show/product/s2-solar-lamp/?tx_marketplace_articlesearch%5Bcontroller%5D=Product&cHash=edb224d00917c9e9ea2fb69977ae606c"))
+    
     # iterate through indexes 4 - 9 in css array result
     product_features = []
     5.times { |i|
       product_features << doc.css('div.row div.col-xs-12 p')[i + 4].text.gsub("\r", "")
     }
-
-    availability = doc.css('div.col-xs-12 p')[doc.css('div.col-xs-12 p').length - 1].text.gsub("\n", "").gsub("   ", "")
-
-    manufacturers_site = doc.css('div.col-xs-12 p a')[1]["href"]
-
-    light_global_site = doc.css('div.col-xs-12 p a')[2]["href"]
-
-    awango_site = doc.css('div.col-xs-12 p a')[3]["href"]
 
     distributors = []
     doc.css('div.col-xs-12 td').each_with_index do |info, index|
@@ -34,14 +24,14 @@ class ApplicationController < ActionController::Base
     end
 
     data = {
-      name: product_name,
-      description: product_description,
+      name: doc.css('.col-xs-12 h1').text,
+      description: doc.css('p.bodytext')[0].text,
       features: product_features,
-      availability: availability,
+      availability: doc.css('div.col-xs-12 p')[doc.css('div.col-xs-12 p').length - 1].text.gsub("\n", "").gsub("   ", ""),
       links: {
-        manufacturer: manufacturers_site,
-        lighting_global: light_global_site,
-        awango: awango_site
+        manufacturer: doc.css('div.col-xs-12 p a')[1]["href"],
+        lighting_global: doc.css('div.col-xs-12 p a')[2]["href"],
+        awango: doc.css('div.col-xs-12 p a')[3]["href"]
       },
       distributors: distributors
     }
