@@ -15,14 +15,17 @@ class ApplicationController < ActionController::Base
 
     availability = doc.css('div.col-xs-12 p')[doc.css('div.col-xs-12 p').length - 1].text.gsub("\n", "").gsub("   ", "")
 
-    manufacturers_site = doc.css('div.col-xs-12 p')
+    manufacturers_site = doc.css('div.col-xs-12 p a')[1]["href"]
     data = {
       name: product_name,
       description: product_description,
       features: product_features,
-      availability: availability
+      availability: availability,
+      links: {
+        manufacturer: manufacturers_site
+      }
     }
 
-    render html: manufacturers_site
+    render json: data
   end
 end
