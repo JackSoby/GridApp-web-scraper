@@ -14,7 +14,13 @@ class ApplicationController < ActionController::Base
     }
 
     availability = doc.css('div.col-xs-12 p')[28].text
+    data = {
+      name: product_name,
+      description: product_description,
+      features: product_features,
+      availability: availability
+    }
 
-    render html: availability
+    render json: data
   end
 end
