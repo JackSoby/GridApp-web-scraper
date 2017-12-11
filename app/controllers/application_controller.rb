@@ -20,7 +20,9 @@ class ApplicationController < ActionController::Base
     light_global_site = doc.css('div.col-xs-12 p a')[2]["href"]
 
     awango_site = doc.css('div.col-xs-12 p a')[3]["href"]
-    
+
+    distributors = doc.css('div.col-xs-12 td')
+
     data = {
       name: product_name,
       description: product_description,
@@ -33,6 +35,6 @@ class ApplicationController < ActionController::Base
       }
     }
 
-    render json: data
+    render html: distributors
   end
 end
