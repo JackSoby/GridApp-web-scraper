@@ -21,7 +21,17 @@ class ApplicationController < ActionController::Base
 
     awango_site = doc.css('div.col-xs-12 p a')[3]["href"]
 
-    distributors = doc.css('div.col-xs-12 td')
+    distributors = []
+    doc.css('div.col-xs-12 td').each_with_index do |info, index|
+      if index % 4 == 0
+        {
+          dealer: doc.css('div.col-xs-12 td')[index].text,
+          country: doc.css('div.col-xs-12 td')[index + 1].text,
+          price: doc.css('div.col-xs-12 td')[index + 2].text,
+          contact: doc.css('div.col-xs-12 td')[index + 3].css('a')[0]["href"]
+        }
+      end
+    end
 
     data = {
       name: product_name,
@@ -35,6 +45,6 @@ class ApplicationController < ActionController::Base
       }
     }
 
-    render html: distributors
+    render html: doc.css('div.col-xs-12 td')[3].css('a')[0]["href"]
   end
 end
