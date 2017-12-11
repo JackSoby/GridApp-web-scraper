@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
 
   def scrape_mangoo
     require 'open-uri'
-    doc = Nokogiri::HTML(open("https://www.mangoo.org/product-catalogue/productdetail/market/show/product/s2-solar-lamp/?tx_marketplace_articlesearch%5Bcontroller%5D=Product&cHash=edb224d00917c9e9ea2fb69977ae606c"))
+    doc = Nokogiri::HTML(open("https://www.mangoo.org/product-catalogue/productdetail/market/show/product/s20-solar-lamp/?tx_marketplace_articlesearch%5Bcontroller%5D=Product&cHash=dec2b667b8c66f18d9b28aafd0a09c28"))
     product_name = doc.css('.col-xs-12 h1').text
     product_description = doc.css('p.bodytext')[0].text
 
@@ -16,16 +16,21 @@ class ApplicationController < ActionController::Base
     availability = doc.css('div.col-xs-12 p')[doc.css('div.col-xs-12 p').length - 1].text.gsub("\n", "").gsub("   ", "")
 
     manufacturers_site = doc.css('div.col-xs-12 p a')[1]["href"]
+
+    light_global_site = doc.css('div.col-xs-12 p a')[2]["href"]
+
+    awango_site = doc.css('div.col-xs-12 p a')[3]["href"]
     data = {
       name: product_name,
       description: product_description,
       features: product_features,
       availability: availability,
       links: {
-        manufacturer: manufacturers_site
+        manufacturer: manufacturers_site,
+        lighting_global: light_global_site
       }
     }
 
-    render json: data
+    render html: awango_site
   end
 end
