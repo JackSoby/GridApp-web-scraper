@@ -3,12 +3,14 @@ class ApplicationController < ActionController::Base
 
   def scrape_mangoo
     require 'open-uri'
-    doc = Nokogiri::HTML(open("https://www.mangoo.org/product-catalogue/productdetail/market/show/product/pico-solar-home-system-3000/?tx_marketplace_articlesearch%5Bcontroller%5D=Product&cHash=28d7ac98bfcd74cd35751bee7121bf29"))
+    doc = Nokogiri::HTML(open("https://www.mangoo.org/product-catalogue/productdetail/market/show/product/s20-solar-lamp/?tx_marketplace_articlesearch%5Bcontroller%5D=Product&cHash=dec2b667b8c66f18d9b28aafd0a09c28"))
 
     # LIGHTING GLOBAL WEBSITE
     lighting_global = doc.css('a').find do |p|
       p["href"].include?("lightingglobal")
     end
+
+    lighting_global_page = Nokogiri::HTML(open(lighting_global["href"]))
 
     description = doc.css('p.bodytext')[0].text
 
@@ -52,6 +54,6 @@ class ApplicationController < ActionController::Base
       distributors: distributors
     }
 
-    render json: data
+    render html: lighting_global_page.css('table tr')
   end
 end
