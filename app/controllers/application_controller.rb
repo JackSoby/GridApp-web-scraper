@@ -60,7 +60,7 @@ class ApplicationController < ActionController::Base
 
     data = {
       name: doc.css('.col-xs-12 h1').text,
-      description: doc.css('p.bodytext')[0].text,
+      description: description,
       features: product_features,
       additional_info: additional_info,
       availability: doc.css('div.col-xs-12 p')[doc.css('div.col-xs-12 p').length - 1].text.gsub("\n", "").gsub("   ", ""),
