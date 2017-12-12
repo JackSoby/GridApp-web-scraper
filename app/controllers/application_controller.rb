@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
 
   def scrape_mangoo
     require 'open-uri'
-    doc = Nokogiri::HTML(open("https://www.mangoo.org/product-catalogue/productdetail/market/show/product/s20-solar-lamp/?tx_marketplace_articlesearch%5Bcontroller%5D=Product&cHash=dec2b667b8c66f18d9b28aafd0a09c28"))
+    doc = Nokogiri::HTML(open("https://www.mangoo.org/product-catalogue/productdetail/market/show/product/pico-solar-home-system-7500/?L=0&tx_marketplace_articlesearch%5Bcontroller%5D=Product&cHash=28d7ac98bfcd74cd35751bee7121bf29"))
 
     # LIGHTING GLOBAL WEBSITE
     lighting_global = doc.css('a').find do |p|
@@ -19,7 +19,16 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    description = doc.css('p.bodytext')[0].text
+    description = []
+    doc.css('p').each_with_index do |entry, index|
+      if index > 1
+        if entry.text.include?("Model #")
+          break
+        end
+        description << entry.text
+      end
+    end
+    description = description.join(" \n ")
 
     # iterate through indexes 4 - 9 in css array result to pull PRODUCT FEATURES
     product_features = []
@@ -62,6 +71,6 @@ class ApplicationController < ActionController::Base
       distributors: distributors
     }
 
-    render json: data
+    render html: description
   end
 end
