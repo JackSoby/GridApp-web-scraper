@@ -4,21 +4,62 @@ class ApplicationController < ActionController::Base
   def scrape_mangoo
     require 'open-uri'
     doc = Nokogiri::HTML(open("https://www.mangoo.org/product-catalogue/productdetail/market/show/product/s20-solar-lamp/?tx_marketplace_articlesearch%5Bcontroller%5D=Product&cHash=dec2b667b8c66f18d9b28aafd0a09c28"))
-    product_name = doc.css('.col-xs-12 h1').text
-    product_description = doc.css('p.bodytext')[0].text
 
-    # iterate through indexes 4 - 9 in css array result
+    # LIGHTING GLOBAL WEBSITE
+    lighting_global = doc.css('a').find do |p|
+      p["href"].include?("lightingglobal")
+    end
+
+    lighting_global_page = Nokogiri::HTML(open(lighting_global["href"]))
+
+    additional_info = {}
+    lighting_global_page.css('table tr td').each_with_index do |element, index|
+      if index % 2 == 0
+        additional_info[element.text] = lighting_global_page.css('table tr td')[index + 1].text
+      end
+    end
+
+    description = doc.css('p.bodytext')[0].text
+
+    # iterate through indexes 4 - 9 in css array result to pull PRODUCT FEATURES
     product_features = []
-    5.times { |i|
-      product_features << doc.css('div.row div.col-xs-12 p')[i + 4].text
-    }
+    doc.css('div.row div.col-xs-12 p').each_with_index do |info, index|
+      if info.text.include?("Model")
+        6.times { |i|
+          product_features << doc.css('div.row div.col-xs-12 p')[index + i].text.gsub("\r", "")
+        }
+      end
+    end
 
-    availability = doc.css('div.col-xs-12 p')[28].text
+    # pull all DISTRIBUTOR INFORMATION
+    distributors = []
+    doc.css('div.col-xs-12 td').each_with_index do |info, index|
+      if index % 4 == 0
+        distributors << {
+          dealer: doc.css('div.col-xs-12 td')[index].text,
+          country: doc.css('div.col-xs-12 td')[index + 1].text.gsub("\n", "").gsub("  ", ""),
+          price: doc.css('div.col-xs-12 td')[index + 2].text.gsub("\n", "").gsub("  ", ""),
+          contact: doc.css('div.col-xs-12 td')[index + 3].css('a')[0]["href"]
+        }
+      end
+    end
+
+    # MANUFACTURER'S WEBSITE
+    manufacturer = doc.css('div.col-xs-12 p a').find do |p|
+      p.text.include?("Manufacturer")
+    end
+
     data = {
-      name: product_name,
-      description: product_description,
+      name: doc.css('.col-xs-12 h1').text,
+      description: doc.css('p.bodytext')[0].text,
       features: product_features,
-      availability: availability
+      additional_info: additional_info,
+      availability: doc.css('div.col-xs-12 p')[doc.css('div.col-xs-12 p').length - 1].text.gsub("\n", "").gsub("   ", ""),
+      links: {
+        manufacturer: manufacturer["href"],
+        lighting_global: lighting_global["href"]
+      },
+      distributors: distributors
     }
 
     render json: data
