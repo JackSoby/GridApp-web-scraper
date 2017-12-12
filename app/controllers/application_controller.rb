@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
 
   def scrape_mangoo
     require 'open-uri'
-    doc = Nokogiri::HTML(open("https://www.mangoo.org/product-catalogue/productdetail/market/show/product/pico-solar-home-system-7500/?L=0&tx_marketplace_articlesearch%5Bcontroller%5D=Product&cHash=28d7ac98bfcd74cd35751bee7121bf29"))
+    doc = Nokogiri::HTML(open("https://www.mangoo.org/product-catalogue/productdetail/market/show/product/sun-king-charge/?tx_marketplace_articlesearch%5Bcontroller%5D=Product&cHash=143ef25ec0794b449b8931c296627515"))
 
     # LIGHTING GLOBAL WEBSITE
     lighting_global = doc.css('a').find do |p|
@@ -28,7 +28,7 @@ class ApplicationController < ActionController::Base
         description << entry.text
       end
     end
-    description = description.join(" \n ")
+    description = description.join(" ")
 
     # iterate through indexes 4 - 9 in css array result to pull PRODUCT FEATURES
     product_features = []
@@ -58,12 +58,14 @@ class ApplicationController < ActionController::Base
       p.text.include?("Manufacturer")
     end
 
+    availability = doc.css('div.col-xs-12 p')[doc.css('div.col-xs-12 p').length - 1].text.gsub(/(\   )|(\n)|(\:)|(\,)/, "").split(' ')
+
     data = {
       name: doc.css('.col-xs-12 h1').text,
       description: description,
       features: product_features,
       additional_info: additional_info,
-      availability: doc.css('div.col-xs-12 p')[doc.css('div.col-xs-12 p').length - 1].text.gsub("\n", "").gsub("   ", ""),
+      availability: doc.css('div.col-xs-12 p')[doc.css('div.col-xs-12 p').length - 1].text.gsub(/(\   )|(\n)|(\:)/, ""),
       links: {
         manufacturer: manufacturer["href"],
         lighting_global: lighting_global["href"]
@@ -71,6 +73,6 @@ class ApplicationController < ActionController::Base
       distributors: distributors
     }
 
-    render html: description
+    render html: availability
   end
 end
