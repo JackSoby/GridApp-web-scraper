@@ -12,6 +12,13 @@ class ApplicationController < ActionController::Base
 
     lighting_global_page = Nokogiri::HTML(open(lighting_global["href"]))
 
+    additional_info = {}
+    lighting_global_page.css('table tr td').each_with_index do |element, index|
+      if index % 2 == 0
+        additional_info[element.text] = lighting_global_page.css('table tr td')[index + 1].text
+      end
+    end
+
     description = doc.css('p.bodytext')[0].text
 
     # iterate through indexes 4 - 9 in css array result to pull PRODUCT FEATURES
@@ -46,6 +53,7 @@ class ApplicationController < ActionController::Base
       name: doc.css('.col-xs-12 h1').text,
       description: doc.css('p.bodytext')[0].text,
       features: product_features,
+      additional_info: additional_info,
       availability: doc.css('div.col-xs-12 p')[doc.css('div.col-xs-12 p').length - 1].text.gsub("\n", "").gsub("   ", ""),
       links: {
         manufacturer: manufacturer["href"],
@@ -54,6 +62,6 @@ class ApplicationController < ActionController::Base
       distributors: distributors
     }
 
-    render html: lighting_global_page.css('table tr')
+    render json: data
   end
 end
