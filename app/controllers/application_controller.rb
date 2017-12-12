@@ -5,7 +5,12 @@ class ApplicationController < ActionController::Base
     require 'open-uri'
     doc = Nokogiri::HTML(open("https://www.mangoo.org/product-catalogue/productdetail/market/show/product/pico-solar-home-system-3000/?tx_marketplace_articlesearch%5Bcontroller%5D=Product&cHash=28d7ac98bfcd74cd35751bee7121bf29"))
 
-    description = doc.css('p')
+    # LIGHTING GLOBAL WEBSITE
+    lighting_global = doc.css('a').find do |p|
+      p["href"].include?("lightingglobal")
+    end
+
+    description = doc.css('p.bodytext')[0].text
 
     # iterate through indexes 4 - 9 in css array result to pull PRODUCT FEATURES
     product_features = []
@@ -35,11 +40,6 @@ class ApplicationController < ActionController::Base
       p.text.include?("Manufacturer")
     end
 
-    # LIGHTING GLOBAL WEBSITE
-    lighting_global = doc.css('a').find do |p|
-      p["href"].include?("lightingglobal")
-    end
-
     data = {
       name: doc.css('.col-xs-12 h1').text,
       description: doc.css('p.bodytext')[0].text,
@@ -52,6 +52,6 @@ class ApplicationController < ActionController::Base
       distributors: distributors
     }
 
-    render html: description
+    render json: data
   end
 end
