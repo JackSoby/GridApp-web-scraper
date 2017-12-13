@@ -59,6 +59,17 @@ class ApplicationController < ActionController::Base
     end
 
     availability = doc.css('div.col-xs-12 p')[doc.css('div.col-xs-12 p').length - 1].text.gsub(/(\   )|(\n)|(\:)|(\,)/, "").split(' ')
+    locations = {}
+    continent = ''
+    availability.each do |loc|
+      if ["Asia","Africa","North America","South America","Austalia","Europe"].include?(loc)
+        continent = loc
+        locations[continent] = []
+      else
+        locations[continent] << loc
+      end
+
+    end
 
     data = {
       name: doc.css('.col-xs-12 h1').text,
@@ -73,6 +84,6 @@ class ApplicationController < ActionController::Base
       distributors: distributors
     }
 
-    render html: availability
+    render json: locations
   end
 end
