@@ -19,7 +19,16 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    description = doc.css('p.bodytext')[0].text
+    description = []
+    doc.css('p').each_with_index do |entry, index|
+      if index > 1
+        if entry.text.include?("Model #")
+          break
+        end
+        description << entry.text
+      end
+    end
+    description = description.join(" ")
 
     # iterate through indexes 4 - 9 in css array result to pull PRODUCT FEATURES
     product_features = []
@@ -49,12 +58,25 @@ class ApplicationController < ActionController::Base
       p.text.include?("Manufacturer")
     end
 
+    availability = doc.css('div.col-xs-12 p')[doc.css('div.col-xs-12 p').length - 1].text.gsub(/(\   )|(\n)|(\:)|(\,)/, "").split(' ')
+    locations = {}
+    continent = ''
+    availability.each do |loc|
+      if ["Asia","Africa","North America","South America","Austalia","Europe"].include?(loc)
+        continent = loc
+        locations[continent] = []
+      else
+        locations[continent] << loc
+      end
+
+    end
+
     data = {
       name: doc.css('.col-xs-12 h1').text,
-      description: doc.css('p.bodytext')[0].text,
+      description: description,
       features: product_features,
       additional_info: additional_info,
-      availability: doc.css('div.col-xs-12 p')[doc.css('div.col-xs-12 p').length - 1].text.gsub("\n", "").gsub("   ", ""),
+      availability: locations,
       links: {
         manufacturer: manufacturer["href"],
         lighting_global: lighting_global["href"]
