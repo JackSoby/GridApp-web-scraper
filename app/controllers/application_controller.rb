@@ -19,6 +19,13 @@ class ApplicationController < ActionController::Base
       end
     end
 
+    spec_pdf = ''
+    lighting_global_page.css('section.pdf-downloads ul li a').each do |element|
+      if element.text == "Specification Sheet"
+        spec_pdf = element["href"]
+      end
+    end
+
     description = []
     doc.css('p').each_with_index do |entry, index|
       if index > 1
@@ -84,6 +91,6 @@ class ApplicationController < ActionController::Base
       distributors: distributors
     }
 
-    render json: data
+    render html: spec_pdf
   end
 end
