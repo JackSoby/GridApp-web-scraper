@@ -3,6 +3,9 @@ class ApplicationController < ActionController::Base
 
   def scrape_mangoo
     require 'open-uri'
+    require 'rubygems'
+    require 'pdf/reader'
+
     doc = Nokogiri::HTML(open("https://www.mangoo.org/product-catalogue/productdetail/market/show/product/s20-solar-lamp/?tx_marketplace_articlesearch%5Bcontroller%5D=Product&cHash=dec2b667b8c66f18d9b28aafd0a09c28"))
 
     # LIGHTING GLOBAL WEBSITE
@@ -24,6 +27,12 @@ class ApplicationController < ActionController::Base
       if element.text == "Specification Sheet"
         spec_pdf = element["href"]
       end
+    end
+
+    if spec_pdf != ''
+      io = open(spec_pdf)
+      reader = PDF::Reader.new(io)
+      puts reader.info
     end
 
     description = []
@@ -91,6 +100,6 @@ class ApplicationController < ActionController::Base
       distributors: distributors
     }
 
-    render html: spec_pdf
+    render json: data
   end
 end
