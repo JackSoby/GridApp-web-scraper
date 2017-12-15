@@ -30,9 +30,14 @@ class ApplicationController < ActionController::Base
     end
 
     if spec_pdf != ''
+
       io = open(spec_pdf)
+      puts io
       reader = PDF::Reader.new(io)
-      puts reader.info
+      puts reader.read
+      puts 'haha'
+      puts reader.pdf_version
+      puts 'haha'
     end
 
     description = []
@@ -100,6 +105,6 @@ class ApplicationController < ActionController::Base
       distributors: distributors
     }
 
-    render json: data
+    render html: io.read
   end
 end
