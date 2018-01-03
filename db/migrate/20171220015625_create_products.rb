@@ -20,7 +20,6 @@ class CreateProducts < ActiveRecord::Migration[5.1]
       t.string :lamp_type # LED
       t.float :total_light_service # (lumen-hours/solar-day) 130 -- total_light_service
       t.string :light_distribution # wide
-
       t.boolean :port_5v # allow null
       t.boolean :port_12v # allow null
       t.boolean :pay_go # look for pay as go in page
