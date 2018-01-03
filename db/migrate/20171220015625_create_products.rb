@@ -24,12 +24,9 @@ class CreateProducts < ActiveRecord::Migration[5.1]
       t.boolean :port_12v # allow null
       t.boolean :pay_go # look for pay as go in page
       t.boolean :batt_replacable # false
-
-      t.string :manufacturer # d.light design
-      t.string :manufacturer_site # www.dlight.com
       t.string :panel_type # monocrystalline silicon
-
       t.string :image
+      t.belongs_to :manufacturer
 
       # total area of illumination
 
