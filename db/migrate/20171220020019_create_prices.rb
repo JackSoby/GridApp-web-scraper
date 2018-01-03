@@ -8,6 +8,6 @@ class CreatePrices < ActiveRecord::Migration[5.1]
       t.belongs_to :distributor
     end
 
-    add_index :prices, [:product, :distributor], unique: true
+    add_index :prices, [:product_id, :distributor_id], unique: true
   end
 end
