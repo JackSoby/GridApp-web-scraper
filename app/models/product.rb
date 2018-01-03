@@ -6,4 +6,5 @@ class Product < ApplicationRecord
   has_many :distributors, through: :prices
   has_many :product_locs
   has_many :locations, through: :product_locs
+  belongs_to :manufacturer
 end
