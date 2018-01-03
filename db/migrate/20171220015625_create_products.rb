@@ -2,10 +2,10 @@ class CreateProducts < ActiveRecord::Migration[5.1]
   def change
     create_table :products do |t|
       t.string :name, null: false
-      # grab product id from lighting global url
+      t.string :product_id, null: false # product id from lighting global url
       t.text :description
       t.string :model_num_m # S20
-      t.integer :panel_size_m # 0.4
+      t.float :panel_size_m # 0.4
       t.float :batt_size_ah_m # 0.4
       t.float :batt_size_v_m # 3.2 -- PDF: Battery nominal voltage
       t.float :batt_size_wh # batt_size_v_m * batt_size_ah_m
@@ -29,6 +29,8 @@ class CreateProducts < ActiveRecord::Migration[5.1]
       t.string :manufacturer # d.light design
       t.string :manufacturer_site # www.dlight.com
       t.string :panel_type # monocrystalline silicon
+
+      t.string :image
 
       # total area of illumination
 
