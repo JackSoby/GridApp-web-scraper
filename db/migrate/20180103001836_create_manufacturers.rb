@@ -1,6 +1,6 @@
-class CreateDistributors < ActiveRecord::Migration[5.1]
+class CreateManufacturers < ActiveRecord::Migration[5.1]
   def change
-    create_table :distributors do |t|
+    create_table :manufacturers do |t|
       t.string :name, null: false
       t.string :website
       t.string :address
@@ -8,6 +8,6 @@ class CreateDistributors < ActiveRecord::Migration[5.1]
       t.string :phone
     end
 
-    add_index :distributors, :name, unique: true
+    add_index :manufacturers, :name, unique: true
   end
 end
