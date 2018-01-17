@@ -5,8 +5,9 @@ class ApplicationController < ActionController::Base
     require 'open-uri'
     require 'rubygems'
     require 'pdf/reader'
+    require 'csv'
 
-    doc = Nokogiri::HTML(open("https://www.mangoo.org/product-catalogue/productdetail/market/show/product/s20-solar-lamp/?tx_marketplace_articlesearch%5Bcontroller%5D=Product&cHash=dec2b667b8c66f18d9b28aafd0a09c28"))
+    doc = Nokogiri::HTML(open("https://www.mangoo.org/product-catalogue/productdetail/market/show/product/s30-solar-lamp/?tx_marketplace_articlesearch%5Bcontroller%5D=Product&cHash=3015bcc8db500cfbd4e91a3d03d63d32"))
 
     # LIGHTING GLOBAL WEBSITE
     lighting_global = doc.css('a').find do |p|
@@ -22,23 +23,23 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    spec_pdf = ''
-    lighting_global_page.css('section.pdf-downloads ul li a').each do |element|
-      if element.text == "Specification Sheet"
-        spec_pdf = element["href"]
-      end
-    end
-
-    if spec_pdf != ''
-
-      io = open(spec_pdf)
-      puts io
-      reader = PDF::Reader.new(io)
-      puts reader.read
-      puts 'haha'
-      puts reader.pdf_version
-      puts 'haha'
-    end
+    # spec_pdf = ''
+    # lighting_global_page.css('section.pdf-downloads ul li a').each do |element|
+    #   if element.text == "Specification Sheet"
+    #     spec_pdf = element["href"]
+    #   end
+    # end
+    #
+    # if spec_pdf != ''
+    #
+    #   io = open(spec_pdf)
+    #   puts io
+    #   reader = PDF::Reader.new(io)
+    #   puts reader.read
+    #   puts 'haha'
+    #   puts reader.pdf_version
+    #   puts 'haha'
+    # end
 
     description = []
     doc.css('p').each_with_index do |entry, index|
@@ -82,14 +83,22 @@ class ApplicationController < ActionController::Base
     availability = doc.css('div.col-xs-12 p')[doc.css('div.col-xs-12 p').length - 1].text.gsub(/(\   )|(\n)|(\:)|(\,)/, "").split(' ')
     locations = {}
     continent = ''
-    availability.each do |loc|
-      if ["Asia","Africa","North America","South America","Austalia","Europe"].include?(loc)
-        continent = loc
-        locations[continent] = []
-      else
-        locations[continent] << loc
-      end
 
+    # check for presence of <br> in tags.
+    availability.each do |loc|
+      # end
+      # if ["Asia","Africa","North America","South America","Austalia","Europe"].include?(loc)
+      #   continent = loc
+      #   locations[continent] = []
+      # else
+      #   locations[continent] << loc
+      # end
+
+    end
+
+    CSV.open("products.csv", "wb") do |csv|
+      csv << ['name', 'description', 'manufacturer', 'lighting global']
+      csv << [doc.css('.col-xs-12 h1').text, description, manufacturer["href"], lighting_global["href"]]
     end
 
     data = {
@@ -105,6 +114,6 @@ class ApplicationController < ActionController::Base
       distributors: distributors
     }
 
-    render html: io.read
+    render json: data
   end
 end
