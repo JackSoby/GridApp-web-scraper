@@ -95,11 +95,9 @@ class ApplicationController < ActionController::Base
 
     end
 
-    CSV.open("path/to/file.csv", "wb") do |csv|
-      csv << User.attribute_names
-      User.all.each do |user|
-        csv << user.attributes.values
-      end
+    CSV.open("../../public/products.csv", "wb") do |csv|
+      csv << ['name', 'description', 'manufacturer', 'lighting global']
+      csv << [doc.css('.col-xs-12 h1').text, description, manufacturer["href"], lighting_global["href"]]
     end
 
     data = {
