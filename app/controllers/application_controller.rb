@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
     require 'open-uri'
     require 'rubygems'
     require 'pdf/reader'
+    require 'csv'
 
     doc = Nokogiri::HTML(open("https://www.mangoo.org/product-catalogue/productdetail/market/show/product/s30-solar-lamp/?tx_marketplace_articlesearch%5Bcontroller%5D=Product&cHash=3015bcc8db500cfbd4e91a3d03d63d32"))
 
@@ -95,7 +96,7 @@ class ApplicationController < ActionController::Base
 
     end
 
-    CSV.open("../../public/products.csv", "wb") do |csv|
+    CSV.open("products.csv", "wb") do |csv|
       csv << ['name', 'description', 'manufacturer', 'lighting global']
       csv << [doc.css('.col-xs-12 h1').text, description, manufacturer["href"], lighting_global["href"]]
     end
