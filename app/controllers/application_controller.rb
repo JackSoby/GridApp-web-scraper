@@ -96,7 +96,7 @@ class ApplicationController < ActionController::Base
 
     end
 
-    CSV.open("products.csv", "wb") do |csv|
+    CSV.open("./public/products.csv", "wb") do |csv|
       csv << ['name', 'description', 'manufacturer', 'lighting global']
       csv << [doc.css('.col-xs-12 h1').text, description, manufacturer["href"], lighting_global["href"]]
     end
@@ -116,4 +116,5 @@ class ApplicationController < ActionController::Base
 
     render json: data
   end
+
 end
