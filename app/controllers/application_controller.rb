@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
     require 'pdf/reader'
     require 'csv'
 
-    doc = Nokogiri::HTML(open("https://www.mangoo.org/product-catalogue/productdetail/market/show/product/s30-solar-lamp/?tx_marketplace_articlesearch%5Bcontroller%5D=Product&cHash=3015bcc8db500cfbd4e91a3d03d63d32"))
+    doc = Nokogiri::HTML(open("https://www.mangoo.org/product-catalogue/productdetail/market/show/product/s20-solar-lamp/?tx_marketplace_articlesearch%5Bcontroller%5D=Product&cHash=272c9fa15f83d636bc190dcebfc3f6cd"))
 
     # LIGHTING GLOBAL WEBSITE
     lighting_global = doc.css('a').find do |p|
@@ -86,17 +86,18 @@ class ApplicationController < ActionController::Base
 
     # check for presence of <br> in tags.
     availability.each do |loc|
-      # end
-      # if ["Asia","Africa","North America","South America","Austalia","Europe"].include?(loc)
-      #   continent = loc
-      #   locations[continent] = []
-      # else
-      #   locations[continent] << loc
-      # end
-
+      setting = loc.gsub('<br>', '').gsub('<b>', '').gsub('</b>', '')
+      if setting != ''
+        if (loc).include?("Asia") || (loc).include?("Africa")
+          continent = setting
+          locations[continent] = []
+        else
+          locations[continent] << setting
+        end
+      end
     end
 
-    CSV.open("products.csv", "wb") do |csv|
+    CSV.open("./public/products.csv", "wb") do |csv|
       csv << ['name', 'description', 'manufacturer', 'lighting global']
       csv << [doc.css('.col-xs-12 h1').text, description, manufacturer["href"], lighting_global["href"]]
     end
@@ -116,4 +117,5 @@ class ApplicationController < ActionController::Base
 
     render json: data
   end
+
 end
