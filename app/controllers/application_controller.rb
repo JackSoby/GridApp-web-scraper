@@ -90,8 +90,8 @@ class ApplicationController < ActionController::Base
       if (loc).include?("Asia") || (loc).include?("Africa")
         continent = loc
         locations[continent] = []
-      elsif
-        locations[continent] << loc
+      else
+        locations[continent] << loc.gsub('<br>', '').gsub('<b>', '').gsub('</b>', '')
       end
 
     end
