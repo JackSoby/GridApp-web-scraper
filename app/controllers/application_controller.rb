@@ -86,13 +86,15 @@ class ApplicationController < ActionController::Base
 
     # check for presence of <br> in tags.
     availability.each do |loc|
-      if (loc).include?("Asia") || (loc).include?("Africa")
-        continent = loc.gsub('<b>', '')
-        locations[continent] = []
-      else
-        locations[continent] << loc.gsub('<br>', '').gsub('<b>', '').gsub('</b>', '')
+      setting = loc.gsub('<br>', '').gsub('<b>', '').gsub('</b>', '')
+      if setting != ''
+        if (loc).include?("Asia") || (loc).include?("Africa")
+          continent = setting
+          locations[continent] = []
+        else
+          locations[continent] << setting
+        end
       end
-
     end
 
     CSV.open("./public/products.csv", "wb") do |csv|
