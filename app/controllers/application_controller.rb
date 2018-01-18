@@ -86,9 +86,8 @@ class ApplicationController < ActionController::Base
 
     # check for presence of <br> in tags.
     availability.each do |loc|
-
       if (loc).include?("Asia") || (loc).include?("Africa")
-        continent = loc
+        continent = loc.gsub('<b>', '')
         locations[continent] = []
       else
         locations[continent] << loc.gsub('<br>', '').gsub('<b>', '').gsub('</b>', '')
