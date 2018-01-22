@@ -99,11 +99,11 @@ class ApplicationController < ActionController::Base
     end
 
     CSV.open("./public/products.csv", "wb") do |csv|
-      csv << ['name', 'model #', 'description', 'mobile charging LG', 'light points LG', 'solar panel LG', 'battery type LG', 'warranty LG', 'expiration LG', 'panel size M', 'battery size M', 'battery type M', 'lumen M', 'mobile charging M']
+      csv << ['model #', 'name', 'description', 'mobile charging LG', 'light points LG', 'solar panel LG', 'battery type LG', 'warranty LG', 'expiration LG', 'panel size M', 'battery size M', 'battery type M', 'lumen M', 'mobile charging M']
 
       csv << [
-        doc.css('.col-xs-12 h1').text,
         product_features["Model #"],
+        doc.css('.col-xs-12 h1').text,
         description, additional_info["Mobile Phone Charging:"],
         additional_info["Light Points:"],
         additional_info["Solar Panel:"],
@@ -120,11 +120,11 @@ class ApplicationController < ActionController::Base
     end
 
     CSV.open("./public/distributors.csv", "wb") do |csv|
-      csv << ['product', 'dealer_name', 'price', 'location','contact_link']
+      csv << ['model #', 'dealer_name', 'price', 'location','contact_link']
 
       distributors.each do |distributor|
         csv << [
-          doc.css('.col-xs-12 h1').text,
+          product_features["Model #"],
           distributor[:dealer],
           distributor[:price],
           distributor[:country],
@@ -135,6 +135,7 @@ class ApplicationController < ActionController::Base
     end
 
     data = {
+      model_num: product_features["Model #"],
       name: doc.css('.col-xs-12 h1').text,
       description: description,
       features: product_features,
