@@ -99,8 +99,7 @@ class ApplicationController < ActionController::Base
 
     CSV.open("./public/products.csv", "wb") do |csv|
       csv << ['name', 'description', 'mobile_phone_charging', 'light_points', 'solar_panel', 'battery_type', 'warranty_info', 'expiration_date']
-      binding.pry
-      csv << [doc.css('.col-xs-12 h1').text, description
+      csv << [doc.css('.col-xs-12 h1').text, description, additional_info["Mobile Phone Charging:"], additional_info["Light Points:"], additional_info["Solar Panel:"], additional_info["Battery Type:"], additional_info["Warranty Information:"], additional_info["Results Expiration Date:"]]
     end
 
     CSV.open("./public/distributors.csv", "wb") do |csv|
