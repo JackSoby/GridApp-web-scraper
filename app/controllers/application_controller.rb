@@ -57,7 +57,8 @@ class ApplicationController < ActionController::Base
     doc.css('div.row div.col-xs-12 p').each_with_index do |info, index|
       if info.text.include?("Model")
         6.times { |i|
-          product_features << doc.css('div.row div.col-xs-12 p')[index + i].text.gsub("\r", "")
+          puts i
+          product_features << doc.css('div.row div.col-xs-12 p')[index + i].text.gsub("\r", "").gsub(/(.*?)(\: )/, "")
         }
       end
     end
