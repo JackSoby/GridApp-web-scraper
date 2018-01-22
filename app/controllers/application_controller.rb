@@ -53,13 +53,15 @@ class ApplicationController < ActionController::Base
     description = description.join(" ")
 
     # iterate through indexes 4 - 9 in css array result to pull PRODUCT FEATURES
-    product_features = []
+    product_features = {}
     doc.css('div.row div.col-xs-12 p').each_with_index do |info, index|
       if info.text.include?("Model")
-        6.times { |i|
-          puts i
-          product_features << doc.css('div.row div.col-xs-12 p')[index + i].text.gsub("\r", "").gsub(/(.*?)(\: )/, "")
-        }
+        product_features["Model #"] = doc.css('div.row div.col-xs-12 p')[index].text.gsub("\r", "").gsub(/(.*?)(\: )/, "")
+        product_features["Size of Panel (Wp)"] = doc.css('div.row div.col-xs-12 p')[index + 1].text.gsub("\r", "").gsub(/(.*?)(\: )/, "")
+        product_features["Size of Battery (Ah/V)"] = doc.css('div.row div.col-xs-12 p')[index + 2].text.gsub("\r", "").gsub(/(.*?)(\: )/, "")
+        product_features["Battery Type"] = doc.css('div.row div.col-xs-12 p')[index + 3].text.gsub("\r", "").gsub(/(.*?)(\: )/, "")
+        product_features["Lumen"] = doc.css('div.row div.col-xs-12 p')[index + 4].text.gsub("\r", "").gsub(/(.*?)(\: )/, "")
+        product_features["Mobile Charging"] = doc.css('div.row div.col-xs-12 p')[index + 5].text.gsub("\r", "").gsub(/(.*?)(\: )/, "")
       end
     end
 
@@ -99,15 +101,19 @@ class ApplicationController < ActionController::Base
     end
 
     CSV.open("./public/products.csv", "wb") do |csv|
-      csv << ['name', 'description', 'mobile_phone_charging', 'light_points', 'solar_panel', 'battery_type', 'warranty_info', 'expiration_date']
+      csv << ['name', 'description', 'mobile charging LG', 'light points LG', 'solar panel LG', 'battery type LG', 'warranty LG', 'expiration LG']
+
       csv << [doc.css('.col-xs-12 h1').text, description, additional_info["Mobile Phone Charging:"], additional_info["Light Points:"], additional_info["Solar Panel:"], additional_info["Battery Type:"], additional_info["Warranty Information:"], additional_info["Results Expiration Date:"]]
+
     end
 
     CSV.open("./public/distributors.csv", "wb") do |csv|
       csv << ['product', 'dealer_name', 'price', 'location','contact_link']
+
       distributors.each do |distributor|
         csv << [doc.css('.col-xs-12 h1').text, distributor[:dealer], distributor[:price], distributor[:country], distributor[:contact]];
       end
+      
     end
 
     data = {
