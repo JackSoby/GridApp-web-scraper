@@ -36,9 +36,7 @@ class ApplicationController < ActionController::Base
     #   puts io
     #   reader = PDF::Reader.new(io)
     #   puts reader.read
-    #   puts 'haha'
     #   puts reader.pdf_version
-    #   puts 'haha'
     # end
 
     description = []
@@ -103,7 +101,21 @@ class ApplicationController < ActionController::Base
     CSV.open("./public/products.csv", "wb") do |csv|
       csv << ['name', 'model #', 'description', 'mobile charging LG', 'light points LG', 'solar panel LG', 'battery type LG', 'warranty LG', 'expiration LG', 'panel size M', 'battery size M', 'battery type M', 'lumen M', 'mobile charging M']
 
-      csv << [doc.css('.col-xs-12 h1').text, product_features["Model #"], description, additional_info["Mobile Phone Charging:"], additional_info["Light Points:"], additional_info["Solar Panel:"], additional_info["Battery Type:"], additional_info["Warranty Information:"], additional_info["Results Expiration Date:"], product_features["Size of Panel (Wp)"], product_features["Size of Battery (Ah/V)"], product_features["Battery Type"], product_features["Lumen"], product_features["Mobile Charging"]]
+      csv << [
+        doc.css('.col-xs-12 h1').text,
+        product_features["Model #"],
+        description, additional_info["Mobile Phone Charging:"],
+        additional_info["Light Points:"],
+        additional_info["Solar Panel:"],
+        additional_info["Battery Type:"],
+        additional_info["Warranty Information:"],
+        additional_info["Results Expiration Date:"],
+        product_features["Size of Panel (Wp)"],
+        product_features["Size of Battery (Ah/V)"],
+        product_features["Battery Type"],
+        product_features["Lumen"],
+        product_features["Mobile Charging"]
+      ]
 
     end
 
@@ -111,7 +123,13 @@ class ApplicationController < ActionController::Base
       csv << ['product', 'dealer_name', 'price', 'location','contact_link']
 
       distributors.each do |distributor|
-        csv << [doc.css('.col-xs-12 h1').text, distributor[:dealer], distributor[:price], distributor[:country], distributor[:contact]];
+        csv << [
+          doc.css('.col-xs-12 h1').text,
+          distributor[:dealer],
+          distributor[:price],
+          distributor[:country],
+          distributor[:contact]
+        ];
       end
 
     end
