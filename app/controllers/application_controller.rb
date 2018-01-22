@@ -102,6 +102,13 @@ class ApplicationController < ActionController::Base
       csv << [doc.css('.col-xs-12 h1').text, description, manufacturer["href"], lighting_global["href"]]
     end
 
+    CSV.open("./public/distributors.csv", "wb") do |csv|
+      csv << ['product', 'dealer_name', 'price', 'location','contact_link']
+      distributors.each do |distributor|
+        csv << [doc.css('.col-xs-12 h1').text, distributor[:dealer], distributor[:price], distributor[:country], distributor[:contact]];
+      end
+    end
+
     data = {
       name: doc.css('.col-xs-12 h1').text,
       description: description,
