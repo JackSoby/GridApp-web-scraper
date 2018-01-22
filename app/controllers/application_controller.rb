@@ -36,9 +36,7 @@ class ApplicationController < ActionController::Base
     #   puts io
     #   reader = PDF::Reader.new(io)
     #   puts reader.read
-    #   puts 'haha'
     #   puts reader.pdf_version
-    #   puts 'haha'
     # end
 
     description = []
@@ -53,12 +51,15 @@ class ApplicationController < ActionController::Base
     description = description.join(" ")
 
     # iterate through indexes 4 - 9 in css array result to pull PRODUCT FEATURES
-    product_features = []
+    product_features = {}
     doc.css('div.row div.col-xs-12 p').each_with_index do |info, index|
       if info.text.include?("Model")
-        6.times { |i|
-          product_features << doc.css('div.row div.col-xs-12 p')[index + i].text.gsub("\r", "")
-        }
+        product_features["Model #"] = doc.css('div.row div.col-xs-12 p')[index].text.gsub("\r", "").gsub(/(.*?)(\: )/, "")
+        product_features["Size of Panel (Wp)"] = doc.css('div.row div.col-xs-12 p')[index + 1].text.gsub("\r", "").gsub(/(.*?)(\: )/, "")
+        product_features["Size of Battery (Ah/V)"] = doc.css('div.row div.col-xs-12 p')[index + 2].text.gsub("\r", "").gsub(/(.*?)(\: )/, "")
+        product_features["Battery Type"] = doc.css('div.row div.col-xs-12 p')[index + 3].text.gsub("\r", "").gsub(/(.*?)(\: )/, "")
+        product_features["Lumen"] = doc.css('div.row div.col-xs-12 p')[index + 4].text.gsub("\r", "").gsub(/(.*?)(\: )/, "")
+        product_features["Mobile Charging"] = doc.css('div.row div.col-xs-12 p')[index + 5].text.gsub("\r", "").gsub(/(.*?)(\: )/, "")
       end
     end
 
@@ -98,8 +99,39 @@ class ApplicationController < ActionController::Base
     end
 
     CSV.open("./public/products.csv", "wb") do |csv|
-      csv << ['name', 'description', 'manufacturer', 'lighting global']
-      csv << [doc.css('.col-xs-12 h1').text, description, manufacturer["href"], lighting_global["href"]]
+      csv << ['name', 'model #', 'description', 'mobile charging LG', 'light points LG', 'solar panel LG', 'battery type LG', 'warranty LG', 'expiration LG', 'panel size M', 'battery size M', 'battery type M', 'lumen M', 'mobile charging M']
+
+      csv << [
+        doc.css('.col-xs-12 h1').text,
+        product_features["Model #"],
+        description, additional_info["Mobile Phone Charging:"],
+        additional_info["Light Points:"],
+        additional_info["Solar Panel:"],
+        additional_info["Battery Type:"],
+        additional_info["Warranty Information:"],
+        additional_info["Results Expiration Date:"],
+        product_features["Size of Panel (Wp)"],
+        product_features["Size of Battery (Ah/V)"],
+        product_features["Battery Type"],
+        product_features["Lumen"],
+        product_features["Mobile Charging"]
+      ]
+
+    end
+
+    CSV.open("./public/distributors.csv", "wb") do |csv|
+      csv << ['product', 'dealer_name', 'price', 'location','contact_link']
+
+      distributors.each do |distributor|
+        csv << [
+          doc.css('.col-xs-12 h1').text,
+          distributor[:dealer],
+          distributor[:price],
+          distributor[:country],
+          distributor[:contact]
+        ];
+      end
+
     end
 
     data = {
