@@ -2,6 +2,13 @@
 
 -----
 ## To run this app on your local machine
+  * Install Ruby.2.3.3
+  * In a terminal, run `git clone https://github.com/luigilake/GridApp-web-scraper.git`
+  * Navigate to the project's root directory with `cd pensieve`
+  * Run `bundle install && rake db:setup`
+  * In terminal, run rails s
+  * Visit `http://localhost:3000/` in your browser.
+-----
 
 ## Web Scraper
 
