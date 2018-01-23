@@ -27,3 +27,9 @@ While the scraper currently works, there are a couple of things that need to be 
     * The CSVs will have a column entitled 'VERIFIED', with the values 'YES' or 'NO'. The Mwangazi team will change this to 'YES' if they've verified the information in a row.
   * IF INFORMATION IS VERIFIED, PULL ALL INFO FROM CSVs THEN ADD THEM TO THE DATABASE.
   * Done!
+  -----
+
+## Database
+This database has 3 main tables; ***Products, Locations, and Distributors***, each having a join table within them. Other relevant tables aside from those three is the ***Manufacturer*** table, which has a one to many relationship with the ***Products*** table, and the ***Prices*** table, which functions as the join table between ***Products*** and ***Distributors***.
+
+Please refer to the `schema.rb` file to see all the columns within said tables.
