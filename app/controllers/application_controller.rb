@@ -23,6 +23,8 @@ class ApplicationController < ActionController::Base
       end
     end
 
+    # PDF SCRAPING - RECENT FORMAT CHANGE - REDO
+
     # spec_pdf = ''
     # lighting_global_page.css('section.pdf-downloads ul li a').each do |element|
     #   if element.text == "Specification Sheet"
@@ -39,6 +41,7 @@ class ApplicationController < ActionController::Base
     #   puts reader.pdf_version
     # end
 
+    # Scrape product description
     description = []
     doc.css('p').each_with_index do |entry, index|
       if index > 1
@@ -50,7 +53,7 @@ class ApplicationController < ActionController::Base
     end
     description = description.join(" ")
 
-    # iterate through indexes 4 - 9 in css array result to pull PRODUCT FEATURES
+    # Scrape product features
     product_features = {}
     doc.css('div.row div.col-xs-12 p').each_with_index do |info, index|
       if info.text.include?("Model")
@@ -63,7 +66,7 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    # pull all DISTRIBUTOR INFORMATION
+    # Scrape all distributor information
     distributors = []
     doc.css('div.col-xs-12 td').each_with_index do |info, index|
       if index % 4 == 0
@@ -76,16 +79,15 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    # MANUFACTURER'S WEBSITE
+    # Scrape manufacturer website link
     manufacturer = doc.css('div.col-xs-12 p a').find do |p|
       p.text.include?("Manufacturer")
     end
 
+    # Scrape for product availability (country and continent)
     availability = doc.css('div.col-xs-12 p')[doc.css('div.col-xs-12 p').length - 1].text.gsub(/(\   )|(\n)|(\:)|(\,)/, "").split(' ')
     locations = {}
     continent = ''
-
-    # check for presence of <br> in tags.
     availability.each do |loc|
       setting = loc.gsub('<br>', '').gsub('<b>', '').gsub('</b>', '')
       if setting != ''
@@ -98,6 +100,7 @@ class ApplicationController < ActionController::Base
       end
     end
 
+    # CSVs
     CSV.open("./public/products.csv", "wb") do |csv|
       csv << ['model #', 'name', 'description', 'mobile charging LG', 'light points LG', 'solar panel LG', 'battery type LG', 'warranty LG', 'expiration LG', 'panel size M', 'battery size M', 'battery type M', 'lumen M', 'mobile charging M']
 
