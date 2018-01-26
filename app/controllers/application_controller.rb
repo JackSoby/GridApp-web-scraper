@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
     require 'csv'
 
     doc = Nokogiri::HTML(open("https://www.mangoo.org/product-catalogue/productdetail/market/show/product/s20-solar-lamp/?tx_marketplace_articlesearch%5Bcontroller%5D=Product&cHash=272c9fa15f83d636bc190dcebfc3f6cd"))
-
+    #test commit
     # LIGHTING GLOBAL WEBSITE
     lighting_global = doc.css('a').find do |p|
       p["href"].include?("lightingglobal")
