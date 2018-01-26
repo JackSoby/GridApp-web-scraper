@@ -7,8 +7,18 @@ class ApplicationController < ActionController::Base
     require 'pdf/reader'
     require 'csv'
 
-    doc = Nokogiri::HTML(open("https://www.mangoo.org/product-catalogue/productdetail/market/show/product/s20-solar-lamp/?tx_marketplace_articlesearch%5Bcontroller%5D=Product&cHash=272c9fa15f83d636bc190dcebfc3f6cd"))
-    #test commit
+    doc = Nokogiri::HTML(open("https://www.mangoo.org/product-catalogue/productdetail/market/show/product/s2-solar-lamp/?tx_marketplace_articlesearch%5Bcontroller%5D=Product&cHash=5f4fa2e9c317089e10a11ab639bfd706"))
+
+
+    #WORKING LINKS
+    #https://www.mangoo.org/product-catalogue/productdetail/market/show/product/s20-solar-lamp/?tx_marketplace_articlesearch%5Bcontroller%5D=Product&cHash=272c9fa15f83d636bc190dcebfc3f6cd
+    #https://www.mangoo.org/product-catalogue/productdetail/market/show/product/s2-solar-lamp/?tx_marketplace_articlesearch%5Bcontroller%5D=Product&cHash=5f4fa2e9c317089e10a11ab639bfd706
+    #https://www.mangoo.org/product-catalogue/productdetail/market/show/product/s100-solar-lamp/?tx_marketplace_articlesearch%5Bcontroller%5D=Product&cHash=eb13d18c6f6928fbac0a5ae45b1ca3bc
+
+    #NOT WORKING LINKS
+    #https://www.mangoo.org/product-catalogue/productdetail/market/show/product/a2-solar-lamp/?tx_marketplace_articlesearch%5Bcontroller%5D=Product&cHash=0ca4f705ac7682f2875460a40548f212
+
+
     # LIGHTING GLOBAL WEBSITE
     lighting_global = doc.css('a').find do |p|
       p["href"].include?("lightingglobal")
@@ -90,14 +100,17 @@ class ApplicationController < ActionController::Base
     continent = ''
     availability.each do |loc|
       setting = loc.gsub('<br>', '').gsub('<b>', '').gsub('</b>', '')
-      if setting != ''
+      if setting != nil
         if (loc).include?("Asia") || (loc).include?("Africa")
           continent = setting
           locations[continent] = []
         else
+          locations[continent] = []
+          setting = 'N/A'
           locations[continent] << setting
         end
       end
+
     end
 
     # CSVs
