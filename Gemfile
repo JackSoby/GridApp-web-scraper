@@ -6,7 +6,8 @@ gem 'puma', '~> 3.7'
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'nokogiri'
-gem 'pdf-reader'
+gem 'pdf-reader', :git => 'https://github.com/yob/pdf-reader'
+
 
 group :development do
   gem 'listen', '~> 3.0.5'
