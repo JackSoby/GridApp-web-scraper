@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
     require 'pdf/reader'
     require 'csv'
 
-    doc = Nokogiri::HTML(open("https://www.mangoo.org/product-catalogue/productdetail/market/show/product/s2-solar-lamp/?tx_marketplace_articlesearch%5Bcontroller%5D=Product&cHash=5f4fa2e9c317089e10a11ab639bfd706"))
+    doc = Nokogiri::HTML(open("https://www.mangoo.org/product-catalogue/productdetail/market/show/product/s20-solar-lamp/?tx_marketplace_articlesearch%5Bcontroller%5D=Product&cHash=272c9fa15f83d636bc190dcebfc3f6cd"))
 
 
     #WORKING LINKS
@@ -35,21 +35,20 @@ class ApplicationController < ActionController::Base
 
     # PDF SCRAPING - RECENT FORMAT CHANGE - REDO
 
-    # spec_pdf = ''
-    # lighting_global_page.css('section.pdf-downloads ul li a').each do |element|
-    #   if element.text == "Specification Sheet"
-    #     spec_pdf = element["href"]
-    #   end
-    # end
-    #
-    # if spec_pdf != ''
-    #
-    #   io = open(spec_pdf)
-    #   puts io
-    #   reader = PDF::Reader.new(io)
-    #   puts reader.read
-    #   puts reader.pdf_version
-    # end
+    spec_pdf = ''
+  lighting_global_page.css('section.pdf-downloads ul li a').each do |element|
+    if element.text == "Specification Sheet"
+      spec_pdf = element["href"]
+    end
+  end
+
+  if spec_pdf != ''
+    io = open(spec_pdf)
+    puts io
+    reader = PDF::Reader.new(io)
+  end
+
+
 
     # Scrape product description
     description = []
