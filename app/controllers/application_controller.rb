@@ -43,19 +43,21 @@ class ApplicationController < ActionController::Base
   end
 
   if spec_pdf != ''
-    reader = PDF::Reader.new(open(spec_pdf))
+
+    reader = PDF::Reader.new(open(filename))
+
   end
 
 
   paragraph = ""
   pdf_info = []
   reader.pages.each do |page|
-    lines = page.text.scan(/^.+/)
+    lines = page.text.scan(/^.+/).strip
     lines.each do |line|
       if line.length > 55
-        paragraph += " #{line.gsub(/\s+/, " ")}"
+        paragraph += " #{line}"
       else
-        paragraph += " #{line.gsub(/\s+/, " ")}"
+        paragraph += " #{line}"
         pdf_info << paragraph
         paragraph = ""
       end
