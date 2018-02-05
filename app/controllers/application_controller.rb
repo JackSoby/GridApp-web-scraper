@@ -42,27 +42,33 @@ class ApplicationController < ActionController::Base
     end
   end
 
+
+
+ io = open(spec_pdf)
   if spec_pdf != ''
 
-    reader = PDF::Reader.new(open(filename))
+    reader = PDF::Reader.new(io)
 
   end
+
+
 
 
   paragraph = ""
   pdf_info = []
   reader.pages.each do |page|
-    lines = page.text.scan(/^.+/).strip
+    lines = page.text.scan(/^.+/)
     lines.each do |line|
-      if line.length > 55
-        paragraph += " #{line}"
-      else
-        paragraph += " #{line}"
+        paragraph += "#{line.squish}"
         pdf_info << paragraph
         paragraph = ""
-      end
     end
   end
+
+
+
+
+
 
     # Scrape product description
     description = []
@@ -174,7 +180,7 @@ class ApplicationController < ActionController::Base
         manufacturer: manufacturer["href"],
         lighting_global: lighting_global["href"]
       },
-      pdf_info: pdf_info,
+      pdf_info: pdf_info.length,
       distributors: distributors
     }
 
