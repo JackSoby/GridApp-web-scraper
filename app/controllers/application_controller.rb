@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
     require 'pdf/reader'
     require 'csv'
 
-    doc = Nokogiri::HTML(open("https://www.mangoo.org/product-catalogue/productdetail/market/show/product/s20-solar-lamp/?tx_marketplace_articlesearch%5Bcontroller%5D=Product&cHash=272c9fa15f83d636bc190dcebfc3f6cd"))
+    doc = Nokogiri::HTML(open("https://www.mangoo.org/product-catalogue/productdetail/market/show/product/s100-solar-lamp/?tx_marketplace_articlesearch%5Bcontroller%5D=Product&cHash=eb13d18c6f6928fbac0a5ae45b1ca3bc"))
 
 
     #WORKING LINKS
@@ -43,9 +43,8 @@ class ApplicationController < ActionController::Base
   end
 
 
-
- io = open(spec_pdf)
   if spec_pdf != ''
+   io = open(spec_pdf)
 
     reader = PDF::Reader.new(io)
 
@@ -58,11 +57,7 @@ class ApplicationController < ActionController::Base
   pdf_info = []
   reader.pages.each do |page|
     lines = page.text.scan(/^.+/)
-    lines.each do |line|
-        paragraph += "#{line.squish}"
-        pdf_info << paragraph
-        paragraph = ""
-    end
+    pdf_info << lines
   end
 
 
@@ -180,7 +175,7 @@ class ApplicationController < ActionController::Base
         manufacturer: manufacturer["href"],
         lighting_global: lighting_global["href"]
       },
-      pdf_info: pdf_info.length,
+      pdf_info: pdf_info,
       distributors: distributors
     }
 
