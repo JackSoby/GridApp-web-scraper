@@ -60,9 +60,39 @@ class ApplicationController < ActionController::Base
     pdf_info << lines
   end
 
+  pdf = pdf_info [0]
+  pdf += pdf_info [1]
+
+  lighting_global_pdf = {
+      "num_lights_lg" => nil,
+      "lumens_lg" => nil,
+      "lighting_runtime_lg" => nil,
+      "batt_type_lg" => nil,
+      "mobile_charge_lg" => nil,
+      "warranty_lg" => nil,
+      "expiration_lg" => nil,
+      "solar_lg" => nil
+  }
 
 
-
+ pdf.each do |line|
+   if line.include?('ID number')
+     lighting_global_pdf["num_lights_lg"] = line
+   elsif line.include?('Total light output (lumens)')
+        lighting_global_pdf["lumens_lg"] = line
+      elsif line.include?('Full battery run time')
+        lighting_global_pdf["lighting_runtime_lg"] = line
+      elsif line.include?('Battery chemistry ')
+          lighting_global_pdf["batt_type_lg"] = line
+        elsif line.include?('Mobile charging')
+          lighting_global_pdf["mobile_charge_lg"] = line
+        elsif line.include?('warranty')
+          lighting_global_pdf["warranty_lg"] = line
+      elsif line.include?('expiration date')
+        lighting_global_pdf["expiration_lg"] = line
+      else 
+   end
+end
 
 
     # Scrape product description
@@ -175,7 +205,7 @@ class ApplicationController < ActionController::Base
         manufacturer: manufacturer["href"],
         lighting_global: lighting_global["href"]
       },
-      pdf_info: pdf_info,
+      pdf_info:  lighting_global_pdf ,
       distributors: distributors
     }
 
