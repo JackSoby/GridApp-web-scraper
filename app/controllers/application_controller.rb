@@ -77,20 +77,20 @@ class ApplicationController < ActionController::Base
 
  pdf.each do |line|
    if line.include?('ID number')
-     lighting_global_pdf["num_lights_lg"] = line
+     lighting_global_pdf["num_lights_lg"] = line.gsub(/\s+/, ' ')
    elsif line.include?('Total light output (lumens)')
-        lighting_global_pdf["lumens_lg"] = line
+        lighting_global_pdf["lumens_lg"] = line.gsub(/\s+/, ' ')
       elsif line.include?('Full battery run time')
-        lighting_global_pdf["lighting_runtime_lg"] = line
+        lighting_global_pdf["lighting_runtime_lg"] = line.gsub(/\s+/, ' ')
       elsif line.include?('Battery chemistry ')
-          lighting_global_pdf["batt_type_lg"] = line
+          lighting_global_pdf["batt_type_lg"] = line.gsub(/\s+/, ' ')
         elsif line.include?('Mobile charging')
-          lighting_global_pdf["mobile_charge_lg"] = line
+          lighting_global_pdf["mobile_charge_lg"] = line.gsub(/\s+/, ' ')
         elsif line.include?('warranty')
-          lighting_global_pdf["warranty_lg"] = line
+          lighting_global_pdf["warranty_lg"] = line.gsub(/\s+/, ' ')
       elsif line.include?('expiration date')
-        lighting_global_pdf["expiration_lg"] = line
-      else 
+        lighting_global_pdf["expiration_lg"] = line.gsub(/\s+/, ' ')
+      else
    end
 end
 
