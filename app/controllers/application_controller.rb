@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
     require 'pdf/reader'
     require 'csv'
 
-    doc = Nokogiri::HTML(open("https://www.mangoo.org/product-catalogue/productdetail/market/show/product/s100-solar-lamp/?tx_marketplace_articlesearch%5Bcontroller%5D=Product&cHash=eb13d18c6f6928fbac0a5ae45b1ca3bc"))
+    doc = Nokogiri::HTML(open("https://www.mangoo.org/product-catalogue/productdetail/market/show/product/s2-solar-lamp/?tx_marketplace_articlesearch%5Bcontroller%5D=Product&cHash=5f4fa2e9c317089e10a11ab639bfd706"))
 
 
     #WORKING LINKS
@@ -91,6 +91,7 @@ class ApplicationController < ActionController::Base
       elsif line.include?('expiration date')
         lighting_global_pdf["expiration_lg"] = line.gsub(/\s+/, ' ')
       else
+
    end
 end
 
@@ -159,7 +160,7 @@ end
 
     # CSVs
     CSV.open("./public/products.csv", "wb") do |csv|
-      csv << ['model #', 'name', 'description', 'mobile charging LG', 'light points LG', 'solar panel LG', 'battery type LG', 'warranty LG', 'expiration LG', 'panel size M', 'battery size M', 'battery type M', 'lumen M', 'mobile charging M']
+      csv << ['model #', 'name', 'description', 'mobile charging LG', 'light points LG', 'solar panel LG', 'battery type LG', 'warranty LG', 'expiration LG', 'panel size M', 'battery size M', 'battery type M', 'lumen M', 'mobile charging M', "num_lights_lg", "lumens_lg", "lighting_runtime_lg", "batt_type_lg", "mobile_charge_lg", "warranty_lg", "expiration_lg", "solar_lg"]
 
       csv << [
         product_features["Model #"],
@@ -174,7 +175,15 @@ end
         product_features["Size of Battery (Ah/V)"],
         product_features["Battery Type"],
         product_features["Lumen"],
-        product_features["Mobile Charging"]
+        product_features["Mobile Charging"],
+        lighting_global_pdf["num_lights_lg"],
+        lighting_global_pdf["lumens_lg"],
+        lighting_global_pdf["lighting_runtime_lg"],
+        lighting_global_pdf["batt_type_lg"],
+        lighting_global_pdf["mobile_charge_lg"],
+        lighting_global_pdf["warranty_lg"],
+        lighting_global_pdf["expiration_lg"],
+        lighting_global_pdf["solar_lg"],
       ]
 
     end
