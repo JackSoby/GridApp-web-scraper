@@ -160,7 +160,7 @@ end
 
     # CSVs
     CSV.open("./public/products.csv", "wb") do |csv|
-      csv << ['model #', 'name', 'description', 'mobile charging LG', 'light points LG', 'solar panel LG', 'battery type LG', 'warranty LG', 'expiration LG', 'panel size M', 'battery size M', 'battery type M', 'lumen M', 'mobile charging M', "num_lights_lg", "lumens_lg", "lighting_runtime_lg", "batt_type_lg", "mobile_charge_lg", "warranty_lg", "expiration_lg", "solar_lg"]
+      csv << ['model #', 'name', 'description', 'mobile charging LG', 'light points LG', 'solar panel LG', 'battery type LG', 'warranty LG', 'expiration LG', 'panel size M', 'battery size M', 'battery type M', 'lumen M', 'mobile charging M', "num_lights_lg", "lumens_lg", "lighting_runtime_lg", "batt_type_lg", "mobile_charge_lg", "warranty_lg", "expiration_lg", "solar_lg", "seed"]
 
       csv << [
         product_features["Model #"],
@@ -184,6 +184,7 @@ end
         lighting_global_pdf["warranty_lg"],
         lighting_global_pdf["expiration_lg"],
         lighting_global_pdf["solar_lg"],
+        false
       ]
 
     end
